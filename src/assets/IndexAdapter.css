@@ -1,0 +1,109 @@
+/* 媒体查询 */
+@media only screen and (min-width: 800px) and (max-width: 1080px) {
+    .baselayout_left {
+        margin-right: 1%;
+        width: calc(24% - 4px);
+        top: 70px;
+        left: calc((100vw - 44% - 24% - 27% - 2%) / 2);
+    }
+
+    .mian_content {
+        width: 44% !important;
+        left: calc((100vw - 44% - 24% - 27% - 2%) / 2 + 25%);
+    }
+    .content_title .el-card__header {
+        width: calc(44% - 32px) !important;
+    }
+
+    .baselayout_right {
+        margin-left: 0.9%;
+        width: 27%;
+        /* top: 70px; */
+        right: calc((100vw - 44% - 24% - 27% - 2%) / 2);
+    }
+    .j {display: block !important;}
+    .jh {display: none !important;}
+    .StickyPosts-item-left {
+        margin-right: 10px;
+    }
+}
+@media only screen and (min-width: 1080px) and (max-width: 1420px) {
+    .baselayout_left {
+        margin-right: 1.4%;
+        width: calc(20% - 4px);
+        top: 80px;
+        left: calc((100vw - 52% - 20% - 22% - 2.8%) / 2);
+    }
+    .baselayout_right {
+        margin-left: 1.4%;
+        width: 22%;
+        /* top: 80px; */
+        right: calc((100vw - 52% - 20% - 22% - 2.8%) / 2);
+    }
+    .j {display: block !important;}
+    .jh {display: none !important;}
+    
+    .mian_content {
+        width: 52% !important;
+        left: calc((100vw - 52% - 20% - 22% - 2.8%) / 2 + 21.4%) !important;
+    }
+    .content_title .el-card__header {
+        width: calc(52% - 32px) !important;
+    }
+}
+@media only screen and (max-width: 1200px), screen and (max-height: 700px) {
+    .baselayout_right .recommend-header span{
+        font-size: 14px !important;
+    }
+    .j {display: block !important;}
+    .jh {display: none !important;}
+    .StickyPosts-item {
+        height: 32px;
+    }
+    .StickyPosts-item-left,
+    .StickyPosts-item-right  {
+        font-size: 14px;
+    }
+
+}
+@media only screen and (min-width: 1080px) and (max-width: 1420px) {
+    .j {display: none !important;}
+    .jh {display: block !important;}
+}
+
+@media only screen and (min-width: 1420px) {
+    .baselayout_left {
+        margin-right: 20px;
+        width: 296px;
+        top: 80px;
+        left: calc((100vw - 750px - 300px - 330px - 40px) / 2);
+    }
+
+    .mian_content {
+        width: 750px !important;
+        left: calc((100vw - 750px - 300px - 330px - 40px) / 2 + 320px);
+    }
+    .content_title .el-card__header {
+        width: calc(750px - 32px) !important;
+    }
+
+    .baselayout_right {
+        margin-left: 20px;
+        width: 330px;
+        top: 80px;
+        right: calc((100vw - 750px - 300px - 330px - 40px) / 2)
+    }
+    .j {
+        display: none !important;
+    }
+    .StickyPosts .StickyPosts-c {
+        padding: 8px 0;
+    }
+    .mian_content {
+        width: 750px !important;
+        left: calc((100vw - 750px - 300px - 330px - 40px) / 2 + 320px) !important
+    }
+    .content_title .el-card__header {
+        width: calc(750px - 32px) !important;
+    }
+}

@@ -1,13 +1,12 @@
 <!-- setup 语法糖 -->
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import Nav from './components/Nav/Nav.vue';
 </script>
 
 <template>
   <div class="content">
-    <nav class="nav">
-      
-    </nav>
+    <Nav />
     <RouterView />
   </div>
 </template>
@@ -16,9 +15,6 @@ import { RouterLink, RouterView } from 'vue-router'
   .content {
     width: 100vw;
     height: 100vh;
-  }
-  .nav {
-    background-color: #fff;
-    height: 60px;
+    white-space: pre-line;
   }
 </style>
