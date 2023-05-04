@@ -9,6 +9,16 @@ const router = createRouter({
       component: Index
     },
     {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView/LoginView.vue')
+    },
+    {
+      path: '/message',
+      name: 'message',
+      component: () => import('../views/MessageView/MessageView.vue')
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting
@@ -18,5 +28,21 @@ const router = createRouter({
     }
   ]
 })
-
+// /user/wx-login
+router.beforeEach((to,form,next)=>{
+  let userID = localStorage.getItem("userId");
+  if(to.path=='/login'){
+    // localStorage.removeItem("userId");
+    if(userID){
+      next({path:'/'})
+    }else{
+      next();
+    }
+  }
+  if(!userID&&to.path!='/login'){
+    next({path:'/login'})
+  }else{
+    next();
+  }
+})
 export default router

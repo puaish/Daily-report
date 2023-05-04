@@ -1,0 +1,113 @@
+.login {
+    width: 1100px;
+    min-width: 800px;
+    height: calc(100vh - 80px);
+    padding-top: 20px;
+    margin: 0 auto;
+}
+.login-content {
+    width: 100%;
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: 0 0 8px 0 #f1f3f4;
+    margin: 0 auto;
+    text-align: center;
+    padding-bottom: 50px;
+    min-height: calc(100vh - 235px);
+    overflow: hidden;
+    box-sizing: content-box;
+}
+.login-box {
+    width: 300px;
+    margin: 20px auto 0;
+}
+.login-box input {
+    outline: none;
+}
+.login-box .title {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 30px;
+    color: #0b0b37;
+    text-align: center;
+    padding-bottom: 32px;
+}
+.QRCode-box {
+    width: 210px;
+    text-align: center;
+    margin: 0 auto;
+    position: relative;
+}
+.QRCode-box .QRCode {
+    width: 198px;
+    height: 198px;
+    box-sizing: border-box;
+    text-align: center;
+    border: 1px solid #eee;
+    margin-left: 5px;
+}
+.QRCode-box .QRCode .QRCode-img {
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+}
+.QRCode-shadow {
+    position: absolute;
+    top: 0;
+    width: 198px;
+    height: 198px;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #eee;
+    cursor: pointer;
+    margin-left: 5px;
+}
+.login-alter {
+    padding-top: 24px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+    color: #0b0b37
+}
+.other {
+    margin-top: 32px;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 26px;
+    color: #4f5a70;
+    font-size: 14px;
+}
+.other-icon {
+    margin: 16px;
+    display: flex;
+    justify-content: center;
+}
+.other-icon .icon {
+    cursor: pointer;
+    border-radius: 50%;
+    background: #f5f7f8;
+    margin: 0 16px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.other-icon .icon .wx {
+    color: rgb(4, 193, 96);
+    font-size: 20px;
+}
+.xieyi {
+    margin-top: 32px;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 26px;
+    color: #4f5a70;
+}
+.xieyi a {
+    cursor: pointer;
+    color: #2469f6;
+}

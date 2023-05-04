@@ -239,3 +239,13 @@
     font-size: 14px;
     color: #8590a6;
 }
+
+
+/* 弹出层 */
+.post-toast {
+    background: rgba(0, 0, 0, 0.5) !important;
+    border: none !important;
+}
+.post-toast .el-message__content {
+    color: white !important;
+}

@@ -4,20 +4,38 @@ import {
   threadTypeListAPI,
   RecommendsAPI,
   stickAPI,
-  threadListAPI
+  threadListAPI,
+  userInfoAPI
 } from "@/http/api";
 import { ArrowDown, View } from "@element-plus/icons-vue";
 import { reactive, onMounted, ref } from "vue";
 import PostView from "../../components/PostView/PostView.vue"
+import {useStore} from "@/stores/counter"
+import Copyright from "@/components/Copyright/Copyright.vue";
+// 仓库
+const store = useStore();
+
+// 
 let pageData = ref([]);
+// 类型列表
 let typeList = ref([]);
+// 
 let recommends = ref([]);
 let stickList = ref([]);
 let activeName = ref("");
 let ThreadList = reactive({data:[]});
 let page = ref(10);
-let queryParame =  ({dzqSid: "85801523-1681349716759", dzqPf: "pc" }) 
-
+let fixedParame =  ({dzqSid: "85801523-1681349716759", dzqPf: "pc" }) 
+let flexibleParame = reactive({
+  parame:{
+    perPage:page.value,
+    page:1,
+    "filter[essence]":0,
+    "filter[attention]":0,
+    "filter[sort]":1,
+    scope:0
+  }
+});
 const tabsList = [
   {name:"不限",type:""},
   {name:"发布时间",type:""},
@@ -28,8 +46,17 @@ const tabsList = [
 
 // 网络请求
 const getData = function () {
+  // 获取个人信息
+  if (localStorage.getItem("userId")) {
+    userInfoAPI({userId:localStorage.getItem("userId") , ...fixedParame }).then((res) => {
+      store.getUserInfo(res.Data)
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+  }
   // 分类
-  categoriesAPI({ ...queryParame })
+  categoriesAPI({ ...fixedParame })
     .then((res) => {
       var allNum = res.Data.reduce((acc, item, index) => {
         return acc + item.threadCount;
@@ -42,7 +69,7 @@ const getData = function () {
       console.log(err);
     });
   // 导航类型
-  threadTypeListAPI({ ...queryParame })
+  threadTypeListAPI({ ...fixedParame })
     .then((res) => {
       typeList.value = res.Data;
     })
@@ -50,7 +77,7 @@ const getData = function () {
       console.log(err);
     });
   // 置顶文章
-  stickAPI({ ...queryParame }).then((res) => {
+  stickAPI({ ...fixedParame }).then((res) => {
     stickList.value = res.Data;
   })
   .catch((err) => {
@@ -60,7 +87,7 @@ const getData = function () {
 // 右侧推荐内容
 const getRecommends = function () {
   // 右侧推荐内容
-  RecommendsAPI({ ...queryParame }).then(
+  RecommendsAPI({ ...fixedParame }).then(
     (res) => {
       recommends.value = res.Data;
     }
@@ -72,30 +99,39 @@ const getRecommends = function () {
 // 获取帖子数据
 const getThreadList = function (parame) {
   // 右侧推荐内容
-  threadListAPI({ ...queryParame,...parame }).then(
+  threadListAPI({ ...fixedParame,...parame }).then(
     (res) => {
       ThreadList.data = res.Data;
     }
   ).catch((err) => {
       console.log(err);
   });
+  flexibleParame.parame = {perPage:page.value,page:1,"filter[essence]":0,"filter[attention]":0,"filter[sort]":1,scope:0};
 };
 // 方法
 const switchClick = function () {
   getRecommends();
 };
+const layoutClick = function (item) {
+  page.value = 10
+  getThreadList({...flexibleParame.parame,"filter[categoryids][0]":item.categoryId});
+}
 // tabs 筛选
 const handleClick = function (pane) {
   page.value = 10
   switch (pane.index) {
     case "0":
-      getThreadList({perPage:page.value,page:1,"filter[essence]":0,"filter[attention]":0,"filter[sort]":1,scope:0});
+      console.log(flexibleParame.parame);
+      getThreadList({...flexibleParame.parame});
       break;
     case "1":
-      getThreadList({perPage:page.value,page:1,"filter[essence]":1,"filter[attention]":0,"filter[sort]":1,scope:0});
+      console.log(flexibleParame.parame);
+      flexibleParame.parame["filter[essence]"] =  1;
+      getThreadList({...flexibleParame.parame});
       break;
     case "2":
-      getThreadList({perPage:page.value,page:1,"filter[essence]":0,"filter[attention]":1,"filter[sort]":1,scope:0});
+      flexibleParame.parame["filter[attention]"] =  1;
+      getThreadList({...flexibleParame.parame});
       break;
     default:
       break;
@@ -104,25 +140,26 @@ const handleClick = function (pane) {
 // 下拉菜单点击
 const dropdownType = function(item) {
   page.value = 10
-  getThreadList({perPage:page.value,page:1,"filter[types][0]":item.type,"filter[essence]":0,"filter[attention]":0,"filter[sort]":1,scope:0});
+  getThreadList({...flexibleParame.parame,"filter[types][0]":item.type});
 }
 const dropdownSort = function(index) {
   page.value = 10
-  getThreadList({perPage:page.value,page:1,"filter[essence]":0,"filter[attention]":0,"filter[sort]":index,scope:0});
+  flexibleParame.parame["filter[sort]"] =  index;
+  getThreadList({...flexibleParame.parame});
 }
 
 
 // 滚动监听
 const load = function() {
   page.value = page.value + 10
-  getThreadList({perPage:page.value,page:1,"filter[essence]":0,"filter[attention]":0,"filter[sort]":1,scope:0});
+  getThreadList({...flexibleParame.parame});
 }
 onMounted(() => {
   getData();
   // 右侧推荐内容
   getRecommends();
   // 获取帖子数据
-  getThreadList({perPage:page.value,page:1,"filter[essence]":0,"filter[attention]":0,"filter[sort]":1,scope:0});
+  getThreadList({...flexibleParame.parame});
 });
 </script>
 
@@ -140,6 +177,7 @@ onMounted(() => {
               v-for="(item, index) in pageData"
               :key="item.pid"
               :index="index + ''"
+              @click="layoutClick(item)"
             >
               <div class="mentItem">
                 <span class="name">{{ item.name }}</span>
@@ -300,19 +338,7 @@ onMounted(() => {
             </div>
           </div>
         </el-card>
-        <div class="copyright">
-          <div><a href="/">© 2023 每日报告</a></div>
-          <div>
-            <a href="https://discuz.chat">Powered By Discuz! Q (v3.0.211223)</a>
-          </div>
-          <div><a href="https://beian.miit.gov.cn/">粤ICP备14037330号</a></div>
-          <div>
-            <a href="http://www.beian.gov.cn/portal/registerSystemInfo">
-              <img src="https://www.mrbaogao.com/dzq-img/beian.png" alt="" />
-              报告源自网络，如侵权请联系删除
-            </a>
-          </div>
-        </div>
+        <Copyright />
       </div>
     </div>
   </main>

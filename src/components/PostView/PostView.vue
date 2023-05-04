@@ -2,15 +2,74 @@
 import '@wangeditor/editor/dist/css/style.css' 
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import {defineProps,ref, watch} from "vue"
-  const props = defineProps({
+import {useStore} from "@/stores/counter"
+import { useRouter } from 'vue-router'
+
+const store = useStore();
+const router = useRouter();
+const props = defineProps({
     data: Array
 })
 const data = ref(props.data);
 const editorOption = ref({})
-const content = '<h2>I am Example</h2>';
 watch(() => props.data, (nv, ov) => { 
   data.value = nv 
 }); 
+// 点赞
+const handleThumbsUp = function() {
+  if (!store.userInfo) router.push("/login");
+}
+// 评论
+const handleComment = function() {
+  if (!store.userInfo) router.push("/login");
+}
+// 分享
+const handleShare = function() {
+  if (!store.userInfo) router.push("/login");
+}
+// copyURL lookUP
+// 查看附件
+const lookUP = function(file) {
+  if (!store.userInfo) {
+    ElMessage({
+      dangerouslyUseHTMLString: true,
+      customClass: "post-toast",
+      offset: 400,
+      message: '<p>暂无权限下载此附件</p>',
+    })
+  } else {
+    location.href = file.thumbUrl
+  }
+  
+}
+// 复制链接
+const copyURL = function(file) {
+  if (!store.userInfo) {
+    ElMessage({
+      dangerouslyUseHTMLString: true,
+      customClass: "post-toast",
+      offset: 400,
+      message: '<p>暂无权限查看此附件</p>',
+    })
+  } else {
+    const copyFunction = function(e){
+      e.clipboardData.setData('text/plain', file.thumbUrl)
+      e.preventDefault()
+      ElMessage({
+        dangerouslyUseHTMLString: true,
+        customClass: "post-toast",
+        offset: 400,
+        message: '<p>复制链接成功</p>',
+        onClose: function() {
+          document.removeEventListener('copy', copyFunction)
+        }
+      })
+    }
+    document.addEventListener('copy', copyFunction)
+    document.execCommand('copy')
+  }
+}
+
 </script>
 <template>
   <el-card :body-style="{ paddingBottom: 0 }" style="margin-bottom: 10px;" v-for="(item,index) in data">
@@ -110,9 +169,9 @@ watch(() => props.data, (nv, ov) => {
                     <span class="file-size">{{ (file.fileSize/1000000).toFixed(2) }} M</span>
                   </div>
                 </div>
-                <div class="file-fun">
-                  <span>链接</span>
-                  <span style="margin-left: 16px">查看</span>
+                <div class="file-fun"> 
+                  <span @click="copyURL(file)">链接</span>
+                  <span style="margin-left: 16px" @click="lookUP(file)">查看</span>
                   <!-- <a :href="file.thumbUrl"></a> -->
                 </div>
               </div>
@@ -123,21 +182,21 @@ watch(() => props.data, (nv, ov) => {
         <div>
           <div class="thumbsUp-comment-share flex">
             <div class="thumbsUp">
-              <div class="icon-num">
+              <div class="icon-num" @click="handleThumbsUp">
                 <i class="iconfont icon-dianzan"></i>
                 <span v-if="!item.likeReward.likePayCount">赞</span>
                 <span v-else>{{ item.likeReward.likePayCount }}</span>
               </div>
             </div>
             <div class="comment">
-              <div class="icon-num">
+              <div class="icon-num" @click="handleComment">
                 <i class="iconfont icon-review"></i>
                 <span v-if="!item.likeReward.postCount">评论</span>
                 <span v-else>{{ item.likeReward.postCount }}</span>
               </div>
             </div>
             <div class="share">
-              <div class="icon-num">
+              <div class="icon-num" @click="handleShare">
                 <i class="iconfont icon-fenxiang"></i>
                 <span v-if="!item.likeReward.shareCount">分享</span>
                 <span v-else>{{ item.likeReward.shareCount }}</span>
